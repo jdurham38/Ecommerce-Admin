@@ -63,7 +63,7 @@ export async function POST(
     }
   });
 
-  let successUrl = "";// Default value
+  let successUrl = `${process.env.FRONTEND_STORE_URL}/cart?success=1`; // Default value
 
   if (params.storeId === 'website1') {
     successUrl = `${process.env.FRONTEND_STORE_URL}/cart?success=1`;
