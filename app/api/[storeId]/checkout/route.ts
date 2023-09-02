@@ -63,8 +63,8 @@ export async function POST(
   });
 
   // Define your frontend store URLs based on the storeId
-  let successUrl = `${process.env.FRONTEND_STORE_URL}/cart?success=1`;
-  let cancelUrl = `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`;
+  let successUrl = `${process.env.FRONTEND_STORE_URL_JACC}/cart?success=1`;
+  let cancelUrl = `${process.env.FRONTEND_STORE_URL_JACC}/cart?canceled=1`;
 
   // Check storeId and update URLs accordingly
   if (params.storeId === "store2") {
