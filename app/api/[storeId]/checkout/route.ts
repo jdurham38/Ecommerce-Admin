@@ -18,15 +18,6 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const storeId = params.storeId;
-
-  // Retrieve store-specific environment variables
-  const storeFrontendURL = process.env[`FRONTEND_STORE_URL_${storeId.toUpperCase()}`];
-
-  if (!storeFrontendURL) {
-    return new NextResponse("Invalid storeId", { status: 400 });
-  }
-
   const { productIds } = await req.json();
 
   if (!productIds || productIds.length === 0) {
@@ -79,14 +70,30 @@ export async function POST(
     phone_number_collection: {
       enabled: true,
     },
-    success_url: `${storeFrontendURL}/cart?success=1`,
-    cancel_url: `${storeFrontendURL}/cart?canceled=1`,
+    success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
+    cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
     metadata: {
       orderId: order.id
     },
   });
 
-  return NextResponse.json({ url: session.url }, {
+  const session2 = await stripe.checkout.sessions.create({
+    line_items,
+    mode: 'payment',
+    billing_address_collection: 'required',
+    phone_number_collection: {
+      enabled: true,
+    },
+    success_url: `${process.env.FRONTEND_STORE_UR_JACCL}/cart?success=1`,
+    cancel_url: `${process.env.FRONTEND_STORE_URL_JACC}/cart?canceled=1`,
+    metadata: {
+      orderId: order.id
+    },
+  });
+
+  
+
+  return NextResponse.json({ url: session.url || session2.url },  {
     headers: corsHeaders
   });
 };
