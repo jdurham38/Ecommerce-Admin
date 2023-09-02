@@ -65,8 +65,13 @@ export async function POST(
     });
   
     // Customize success and cancel URLs based on the storeId parameter
-    const successURL = `/store/${storeId}/cart?success=1`;
-    const cancelURL = `/store/${storeId}/cart?canceled=1`;
+    const successURL = storeId === 'f6076b93-da16-45c9-a507-6d49e11fa07a'
+      ? process.env.FRONTEND_STORE_URL_JACC
+      : process.env.FRONTEND_STORE_URL;
+  
+    const cancelURL = storeId === 'f6076b93-da16-45c9-a507-6d49e11fa07a'
+      ? process.env.FRONTEND_STORE_URL_JACC
+      : process.env.FRONTEND_STORE_URL;
   
     const session = await stripe.checkout.sessions.create({
       line_items,
@@ -75,8 +80,8 @@ export async function POST(
       phone_number_collection: {
         enabled: true,
       },
-      success_url: successURL,
-      cancel_url: cancelURL,
+      success_url: `${successURL}/cart?success=1`,
+      cancel_url: `${cancelURL}/cart?canceled=1`,
       metadata: {
         orderId: order.id
       },
